@@ -1,45 +1,37 @@
 import React, { useState } from 'react';
-import Account from "../assets/account_open.svg";
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import Account from "../assets/account_open.svg";
 
 const Signup = () => {
     const [email, setEmail] = useState('');
-    const [mobile, setMobile] = useState('');
-    const [otp, setOtp] = useState('');
     const [otpSent, setOtpSent] = useState(false);
-    const [isVerified, setIsVerified] = useState(false);
+    const [otp, setOtp] = useState('');
+    const [verifyStatus, setVerifyStatus] = useState('');
+    const navigate = useNavigate();
 
-    const handleSendOTP = async () => {
-        if (!email || !mobile) {
-            return alert("Please enter both email and mobile number");
-        }
-
+    const sendOtp = async () => {
         try {
-            const res = await axios.post("http://localhost:5000/api/auth/send-otp", { email });
-            if (res.status === 200) {
-                alert("OTP sent successfully to your email!");
+            const res = await axios.post('http://localhost:5000/send-otp', { email });
+            if (res.data.success) {
                 setOtpSent(true);
+                alert("OTP sent to your email.");
             }
         } catch (err) {
-            console.error(err);
-            alert("Failed to send OTP");
+            alert("Failed to send OTP. Please check the email.");
         }
     };
 
-    const handleVerifyOTP = async () => {
-        if (!otp) {
-            return alert("Please enter the OTP");
-        }
-
+    const verifyOtp = async () => {
         try {
-            const res = await axios.post("http://localhost:5000/api/auth/verify-otp", { email, otp });
-            if (res.status === 200) {
-                alert("OTP verified successfully!");
-                setIsVerified(true);
+            const res = await axios.post('http://localhost:5000/verify-otp', { email, otp });
+            if (res.data.success) {
+                setVerifyStatus("OTP Verified ✅");
+                // Redirect to Details page with email
+                navigate('/details', { state: { email } });
             }
         } catch (err) {
-            console.error(err);
-            alert("Invalid OTP");
+            setVerifyStatus(err.response?.data?.message || "Verification failed.");
         }
     };
 
@@ -56,68 +48,47 @@ const Signup = () => {
 
             <div className='flex flex-col md:flex-row gap-5'>
                 <div>
-                    <img src={Account} className='w-130' alt="Account Illustration" />
+                    <img src={Account} className='w-130' alt="account" />
                 </div>
 
-                <div className='flex flex-col gap-5 mt-0'>
+                <div className='flex flex-col gap-5'>
                     <h2 className='text-3xl'>Signup now</h2>
                     <p className='text-xl'>Or track your existing application</p>
 
-                    <div className='flex flex-col justify-center items-center gap-5'>
-                        <div className='space-x-3'>
-                            <select className='border-2 border-gray-400 rounded-xl px-2 py-3'>
-                                <option value="+91">🇮🇳 +91</option>
-                                <option value="+1">+1</option>
-                            </select>
-                            <input
-                                type="number"
-                                className='border-2 border-gray-400 px-2 py-3 w-50 md:w-80 rounded-xl'
-                                placeholder='Enter your mobile number'
-                                value={mobile}
-                                onChange={(e) => setMobile(e.target.value)}
-                            />
-                        </div>
+                    <div className='flex flex-col gap-5'>
+                        <input
+                            type="email"
+                            placeholder="Enter your email"
+                            className="border-2 rounded-xl border-gray-400 px-4 py-3 w-80"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
 
-                        <div>
-                            <label className='text-xl font-semibold'>
-                                Email :
-                                <input
-                                    type="email"
-                                    className='ml-10 border-2 rounded-xl border-gray-400 px-2 py-3 w-50 md:w-80'
-                                    placeholder='Enter your email'
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                />
-                            </label>
-                        </div>
-
-                        <button
-                            onClick={handleSendOTP}
-                            className='border-2 px-16 py-3 bg-blue-500 text-white rounded-xl hover:bg-blue-400'
-                        >
-                            Get OTP
-                        </button>
-
-                        {otpSent && (
-                            <div className="flex flex-col gap-3 items-center">
+                        {!otpSent ? (
+                            <button
+                                className="bg-blue-500 hover:bg-blue-400 text-white py-3 px-6 rounded-xl"
+                                onClick={sendOtp}
+                            >
+                                Get OTP
+                            </button>
+                        ) : (
+                            <>
                                 <input
                                     type="text"
                                     placeholder="Enter OTP"
-                                    className="border-2 border-gray-400 px-4 py-2 rounded-xl w-50 md:w-80"
                                     value={otp}
                                     onChange={(e) => setOtp(e.target.value)}
+                                    className="border-2 rounded-xl border-gray-400 px-4 py-3 w-80"
                                 />
+
                                 <button
-                                    onClick={handleVerifyOTP}
-                                    className='border-2 px-16 py-3 bg-green-500 text-white rounded-xl hover:bg-green-400'
+                                    className="bg-green-600 hover:bg-green-500 text-white py-3 px-6 rounded-xl"
+                                    onClick={verifyOtp}
                                 >
                                     Verify OTP
                                 </button>
-                            </div>
-                        )}
-
-                        {isVerified && (
-                            <p className="text-green-500 font-semibold">OTP Verified! You can proceed to the next step.</p>
+                                <p className="text-lg text-center font-semibold">{verifyStatus}</p>
+                            </>
                         )}
                     </div>
                 </div>

@@ -16,10 +16,10 @@ const Hero = () => {
           <button className='border-2 px-6 py-3 bg-blue-500 text-white rounded-xl hover:bg-blue-400' onClick={() => navigate('/signup')}>Sign up for Free</button>
         </div>
       </div>
-      <section className='flex flex-col md:flex-row justify-center items-center gap-5 md:gap-10 md:px-55'>
+      <section className='flex flex-col md:flex-row justify-center items-center gap-5 md:gap-10 md:px-55 mt-20'>
         <div className='flex-1/3 space-y-5'>
           <h1 className='text-3xl font-semibold'>Trust with confidence</h1>
-          <div className='flex flex-col gap-5 text-gray-600'>
+          <div className='flex flex-col gap-6 text-gray-600'>
             <div>
               <h2 className='text-2xl font-semibold'>Customer-first always</h2>
               <p className='text-lg text-gray-500'>That's why 1.5+ crore customers trust Zerodha with ₹4.5+ lakh crores of equity investments and contribute to 15% of daily retail exchange volumes in India.</p>

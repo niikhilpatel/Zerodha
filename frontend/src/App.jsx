@@ -1,20 +1,23 @@
-import React from 'react'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
-import Navbar from './components/Navbar'
-import Hero from './components/Hero'
-import Signup from './pages/Signup'
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Hero from './components/Hero';
+import Navbar from './components/Navbar';
+import SignupPage from './pages/Signup';
+import DetailsPage from './pages/DetailsPage';
+import Footer from './components/Footer';
 
-const App = () => {
+function App() {
   return (
     <Router>
-      <Navbar />
+      <Navbar/>
       <Routes>
         <Route path="/" element={<Hero />} />
-        <Route path="/signup" element={<Signup />} />
+        <Route path="/signup" element={<SignupPage />} />
+        <Route path="/details" element={<DetailsPage />} />
       </Routes>
+      <Footer/>
     </Router>
-
-  )
+  );
 }
 
-export default App
+export default App;
