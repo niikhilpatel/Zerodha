@@ -1,59 +1,42 @@
 import express from 'express';
 import cors from 'cors';
-import bodyParser from 'body-parser';
-import nodemailer from 'nodemailer';
+import dotenv from 'dotenv';
+import multer from 'multer'; // ✅ (Step 1) Import multer
+import otpRoutes from "./routes/otpRoutes.js";
+import mongoose from 'mongoose';
+
+dotenv.config();
 
 const app = express();
-const port = 5000;
+const PORT = process.env.PORT || 5000;
 
 app.use(cors());
-app.use(bodyParser.json());
+app.use(express.json());
 
-let otpStore = {}; // Store OTPs in-memory
 
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: 'your-email@gmail.com',
-    pass: 'your-app-password', // Use Gmail App Password
-  },
-});
+mongoose.connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+})
+.then(() => console.log("MongoDB connected"))
+.catch(err => console.error("MongoDB connection error:", err));
 
-app.post('/send-otp', (req, res) => {
-  const { email } = req.body;
-  const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
-  otpStore[email] = otp;
+let otpStore = {}; // (In-memory OTP store)
 
-  const mailOptions = {
-    from: 'your-email@gmail.com',
-    to: email,
-    subject: 'Your OTP Code',
-    text: `Your OTP code is: ${otp}`,
-  };
+// (Step 2) Set up multer to upload files into 'uploads/' folder
+const upload = multer({ dest: 'uploads/' });
 
-  transporter.sendMail(mailOptions, (err, info) => {
-    if (err) return res.status(500).send({ success: false, error: err.message });
-    res.send({ success: true, message: 'OTP sent!' });
-  });
-});
+app.use("/", otpRoutes);
 
-app.post('/verify-otp', (req, res) => {
-  const { email, otp } = req.body;
-  if (otpStore[email] === otp) {
-    delete otpStore[email];
-    res.send({ success: true });
-  } else {
-    res.status(400).send({ success: false, message: 'Invalid OTP' });
-  }
-});
+// (Step 3) Use multer middleware in your route
+app.post('/save-details', upload.single('bankStatement'), (req, res) => {
+  console.log('Received details:', req.body);    // form fields (name, email, etc.)
+  console.log('Uploaded file:', req.file);        // file info (bank statement pdf)
 
-app.post('/save-details', (req, res) => {
-  console.log('Received details:', req.body);
-  // Save to DB here (MongoDB/PostgreSQL)
   res.send({ success: true });
 });
 
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+app.listen(PORT, () => {
+  console.log(`Server running at http://localhost:${PORT}`);
 });

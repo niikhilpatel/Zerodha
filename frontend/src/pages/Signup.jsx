@@ -8,7 +8,7 @@ const Signup = () => {
     const [otpSent, setOtpSent] = useState(false);
     const [otp, setOtp] = useState('');
     const [verifyStatus, setVerifyStatus] = useState('');
-    const navigate = useNavigate();
+    const navigate = useNavigate(); // Initialize navigate
 
     const sendOtp = async () => {
         try {
@@ -26,14 +26,18 @@ const Signup = () => {
         try {
             const res = await axios.post('http://localhost:5000/verify-otp', { email, otp });
             if (res.data.success) {
-                setVerifyStatus("OTP Verified ✅");
-                // Redirect to Details page with email
-                navigate('/details', { state: { email } });
+                setVerifyStatus("✅ OTP verified successfully! Redirecting...");
+
+                // Redirect to MultiStepForm after 2 seconds
+                setTimeout(() => {
+                    navigate('/multi-step-form', { state: { email } });
+                }, 2000);
             }
         } catch (err) {
-            setVerifyStatus(err.response?.data?.message || "Verification failed.");
+            setVerifyStatus(err.response?.data?.message || "❌ Verification failed.");
         }
     };
+
 
     return (
         <div className='flex flex-col justify-center items-center pt-5 px-10 gap-5'>
@@ -87,7 +91,13 @@ const Signup = () => {
                                 >
                                     Verify OTP
                                 </button>
-                                <p className="text-lg text-center font-semibold">{verifyStatus}</p>
+
+                                {/* Status Message */}
+                                {verifyStatus && (
+                                    <p className={`text-lg text-center font-semibold ${verifyStatus.startsWith('✅') ? 'text-green-600' : 'text-red-600'}`}>
+                                        {verifyStatus}
+                                    </p>
+                                )}
                             </>
                         )}
                     </div>
