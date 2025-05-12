@@ -4,6 +4,8 @@ import dotenv from 'dotenv';
 import multer from 'multer'; // ✅ (Step 1) Import multer
 import otpRoutes from "./routes/otpRoutes.js";
 import mongoose from 'mongoose';
+import wishlistRoutes from './routes/wishlistRoutes.js';
+
 
 dotenv.config();
 
@@ -36,6 +38,21 @@ app.post('/save-details', upload.single('bankStatement'), (req, res) => {
 
   res.send({ success: true });
 });
+
+// Routes
+app.use('/api/wishlist', wishlistRoutes);
+
+
+const razorpayRoutes = require('./routes/razorpay.js');
+app.use('/api/payment', razorpayRoutes)
+
+
+
+
+
+
+
+
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);

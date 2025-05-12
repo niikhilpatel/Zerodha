@@ -1,47 +1,29 @@
 import React from 'react';
 
-const IdentityForm = ({ formData, setFormData, nextStep, prevStep }) => {
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
-
-    return (
-        <div className="flex flex-col gap-5 p-5 items-center">
-            <h2 className="text-2xl font-bold">Identity Details</h2>
-
-            <input
-                type="text"
-                name="aadharNumber"
-                placeholder="Aadhar Number"
-                value={formData.aadharNumber || ''}
-                onChange={handleChange}
-                className="border p-3 w-80 rounded"
-            />
-            <input
-                type="text"
-                name="panNumber"
-                placeholder="PAN Number"
-                value={formData.panNumber || ''}
-                onChange={handleChange}
-                className="border p-3 w-80 rounded"
-            />
-
-            <div className="flex gap-4">
-                <button
-                    onClick={prevStep}
-                    className="bg-gray-500 hover:bg-gray-400 text-white px-6 py-2 rounded"
-                >
-                    Back
-                </button>
-                <button
-                    onClick={nextStep}
-                    className="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded"
-                >
-                    Next
-                </button>
-            </div>
-        </div>
-    );
+const IDDetailsForm = ({ formData, setFormData }) => {
+  return (
+    <div>
+      <h2 className="text-xl font-bold mb-4">ID Details</h2>
+      <div className="mb-4">
+        <label>Aadhaar Number</label>
+        <input
+          type="text"
+          value={formData.aadhaar}
+          onChange={(e) => setFormData({ ...formData, aadhaar: e.target.value })}
+          className="w-full border p-2 rounded"
+        />
+      </div>
+      <div className="mb-4">
+        <label>PAN Number</label>
+        <input
+          type="text"
+          value={formData.pan}
+          onChange={(e) => setFormData({ ...formData, pan: e.target.value })}
+          className="w-full border p-2 rounded"
+        />
+      </div>
+    </div>
+  );
 };
 
-export default IdentityForm;
+export default IDDetailsForm;

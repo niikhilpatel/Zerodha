@@ -30,7 +30,7 @@ const Signup = () => {
 
                 // Redirect to MultiStepForm after 2 seconds
                 setTimeout(() => {
-                    navigate('/multi-step-form', { state: { email } });
+                    navigate('/userdetails', { state: { email } });
                 }, 2000);
             }
         } catch (err) {
@@ -70,7 +70,7 @@ const Signup = () => {
 
                         {!otpSent ? (
                             <button
-                                className="bg-blue-500 hover:bg-blue-400 text-white py-3 px-6 rounded-xl"
+                                className="bg-blue-500 hover:bg-blue-400 text-white py-3 px-6 rounded-xl cursor-pointer"
                                 onClick={sendOtp}
                             >
                                 Get OTP

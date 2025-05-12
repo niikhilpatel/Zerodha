@@ -1,94 +1,76 @@
 import React, { useState } from 'react';
-import PersonalInfoForm from './steps/PersonalInfoForm';
-import IdentityForm from './steps/IdentityForm';
+import PersonalDetailsForm from './steps/PersonalInfoForm';
+import IDDetailsForm from './steps/IdentityForm';
 import SignatureForm from './steps/SignatureForm';
 import BankDetailsForm from './steps/BankDetailsForm';
-import TermsAndConditionsForm from './steps/TermsAndConditionsForm';
-import axios from 'axios';
+import TermsAndConditions from './steps/TermsAndConditionsForm';
 
 const MultiStepForm = () => {
-    const [currentStep, setCurrentStep] = useState(1);
+    const [step, setStep] = useState(0);
     const [formData, setFormData] = useState({
-        name: '',
+        fullName: '',
         dob: '',
         fatherName: '',
-        aadharCard: '',
-        panCard: '',
+        aadhaar: '',
+        pan: '',
         signature: '',
-        bankDetails: {
-            accountNo: '',
-            ifscCode: '',
-            bankName: '',
-            statementFile: null,
-        },
-        acceptedTerms: false,
+        bankName: '',
+        accountNumber: '',
+        ifsc: '',
+        termsAccepted: false,
     });
 
-    const handleNext = () => setCurrentStep((prev) => prev + 1);
-    const handlePrev = () => setCurrentStep((prev) => prev - 1);
+    const steps = [
+        <PersonalDetailsForm formData={formData} setFormData={setFormData} />,
+        <IDDetailsForm formData={formData} setFormData={setFormData} />,
+        <SignatureForm formData={formData} setFormData={setFormData} />,
+        <BankDetailsForm formData={formData} setFormData={setFormData} />,
+        <TermsAndConditions formData={formData} setFormData={setFormData} />,
+    ];
 
-    const handleChange = (field, value) => {
-        setFormData((prev) => ({
-            ...prev,
-            [field]: value,
-        }));
+    const nextStep = () => {
+        if (step < steps.length - 1) setStep(step + 1);
     };
 
-    const handleBankChange = (field, value) => {
-        setFormData((prev) => ({
-            ...prev,
-            bankDetails: {
-                ...prev.bankDetails,
-                [field]: value,
-            },
-        }));
+    const prevStep = () => {
+        if (step > 0) setStep(step - 1);
     };
 
-    const handleSubmit = async () => {
-        try {
-            const formDataToSend = new FormData();
-            for (const key in formData) {
-                if (key === 'bankDetails') {
-                    for (const bankKey in formData.bankDetails) {
-                        formDataToSend.append(bankKey, formData.bankDetails[bankKey]);
-                    }
-                } else {
-                    formDataToSend.append(key, formData[key]);
-                }
-            }
-
-            await axios.post('http://localhost:5000/save-details', formDataToSend, {
-                headers: { 'Content-Type': 'multipart/form-data' },
-            });
-
-            alert('Details submitted successfully!');
-        } catch (err) {
-            console.error(err);
-            alert('Error submitting details.');
-        }
-    };
-
-    const renderStep = () => {
-        switch (currentStep) {
-            case 1:
-                return <PersonalInfoForm formData={formData} handleChange={handleChange} handleNext={handleNext} />;
-            case 2:
-                return <IdentityForm formData={formData} handleChange={handleChange} handleNext={handleNext} handlePrev={handlePrev} />;
-            case 3:
-                return <SignatureForm formData={formData} handleChange={handleChange} handleNext={handleNext} handlePrev={handlePrev} />;
-            case 4:
-                return <BankDetailsForm formData={formData} handleBankChange={handleBankChange} handleNext={handleNext} handlePrev={handlePrev} />;
-            case 5:
-                return <TermsAndConditionsForm formData={formData} handleChange={handleChange} handleSubmit={handleSubmit} handlePrev={handlePrev} />;
-            default:
-                return null;
-        }
+    const handleSubmit = () => {
+        console.log('Form Submitted:', formData);
+        alert('Form submitted successfully!');
     };
 
     return (
-        <div className="p-5 max-w-xl mx-auto">
-            <h1 className="text-2xl font-bold mb-4 text-center">Multi Step Form</h1>
-            {renderStep()}
+        <div className="max-w-md mx-auto mt-10 p-6 border border-white mx-5 rounded-md shadow-md">
+            {steps[step]}
+
+            <div className="flex justify-between mt-6">
+                {step > 0 && (
+                    <button
+                        onClick={prevStep}
+                        className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+                    >
+                        Back
+                    </button>
+                )}
+
+                {step < steps.length - 1 ? (
+                    <button
+                        onClick={nextStep}
+                        className="ml-auto px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                    >
+                        Next
+                    </button>
+                ) : (
+                    <button
+                        onClick={handleSubmit}
+                        className="ml-auto px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 cursor-pointer"
+                    >
+                        Submit
+                    </button>
+                )}
+            </div>
         </div>
     );
 };

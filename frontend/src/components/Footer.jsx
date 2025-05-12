@@ -7,7 +7,7 @@ const Footer = () => {
     return (
         <footer className='md:px-55 px-5 py-10 space-y-10'>
 
-            <div className='flex justify-between  gap-5 mt-20'>
+            <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4  gap-5 mt-20'>
                 <div className='flex flex-col gap-5'>
                     <img src={Logo} className='w-40' />
                     <p className='text-gray-500'>© 2010 - 2025, Zerodha Broking Ltd. <br /> All rights reserved.</p>
@@ -62,7 +62,7 @@ const Footer = () => {
                 <p>Investments in securities market are subject to market risks; read all the related documents carefully before investing.</p>
                 <p>Attention investors: 1) Stock brokers can accept securities as margins from clients only by way of pledge in the depository system w.e.f September 01, 2020. 2) Update your e-mail and phone number with your stock broker / depository participant and receive OTP directly from depository on your e-mail and/or mobile number to create pledge. 3) Check your securities / MF / bonds in the consolidated account statement issued by NSDL/CDSL every month.</p>
                 <p>"Prevent unauthorised transactions in your account. Update your mobile numbers/email IDs with your stock brokers. Receive information of your transactions directly from Exchange on your mobile/email at the end of the day. Issued in the interest of investors. KYC is one time exercise while dealing in securities markets - once KYC is done through a SEBI registered intermediary (broker, DP, Mutual Fund etc.), you need not undergo the same process again when you approach another intermediary." Dear Investor, if you are subscribing to an IPO, there is no need to issue a cheque. Please write the Bank account number and sign the IPO application form to authorize your bank to make payment in case of allotment. In case of non allotment the funds will remain in your bank account. As a business we don't give stock tips, and have not authorized anyone to trade on behalf of others. If you find anyone claiming to be part of Zerodha and offering such services, please create a ticket here.</p>
-                <div className='flex justify-center gap-5 text-[14px]'>
+                <div className='grid grid-cols-5 gap-1 text-[14px]'>
                     <a href="https://zerodha.com/nse" target="_blank" rel="noreferrer">NSE</a>
                     <a href="https://zerodha.com/bse" target="_blank" rel="noreferrer">BSE</a>
                     <a href="https://zerodha.com/mcx" target="_blank" rel="noreferrer">MCX</a>
