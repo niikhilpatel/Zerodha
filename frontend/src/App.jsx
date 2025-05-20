@@ -81,6 +81,7 @@ function App() {
           <Route path="portfolio" element={<><Navbar /><Portfolio /><Footer /></>} />
           <Route path="account" element={<><Navbar /><Account /><Footer /></>} />
         </Route>
+        
 
       </Routes>
     </Router>
