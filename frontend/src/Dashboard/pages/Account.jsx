@@ -60,7 +60,7 @@ const Account = () => {
             <h2 className="text-2xl font-semibold mb-6">Account</h2>
             <ul className="space-y-4">
                 {/* 1. Fund */}
-                <li className="flex justify-between items-center p-1">
+                <li className="flex justify-between items-center shadow p-1">
                     <div>
                         <p className="font-medium">Funds</p>
                         <p className="text-lg text-green-600 font-bold">₹{accountData.fund}</p>
@@ -74,37 +74,37 @@ const Account = () => {
                 </li>
 
                 {/* 2. Client ID */}
-                <li className="flex justify-between items-center p-2">
+                <li className="flex justify-between items-center shadow p-2">
                     <span className="font-medium">Client ID</span>
                     <span className="text-gray-700">{accountData.clientId}</span>
                 </li>
 
                 {/* 3. Fund (again) */}
-                <li className="flex justify-between items-center p-2">
+                <li className="flex justify-between items-center shadow p-2">
                     <span className="font-medium">Fund</span>
                     <span className="text-gray-700">Details...</span>
                 </li>
 
                 {/* 4. Report */}
-                <li className="flex justify-between items-center p-2">
+                <li className="flex justify-between items-center shadow p-2">
                     <span className="font-medium">Report</span>
                     <span className="text-gray-700">View Reports</span>
                 </li>
 
                 {/* 5. Transactions */}
-                <li className="flex justify-between items-center p-2">
+                <li className="flex justify-between items-center shadow p-2">
                     <span className="font-medium">Transactions</span>
                     <span className="text-gray-700">History</span>
                 </li>
 
                 {/* 6. Help */}
-                <li className="flex justify-between items-center p-2">
+                <li className="flex justify-between items-center shadow p-2">
                     <span className="font-medium">Help</span>
                     <span className="text-gray-700">Get Support</span>
                 </li>
 
                 {/* 7. Refer a Friend */}
-                <li className="flex justify-between items-center p-2">
+                <li className="flex justify-between items-center shadow p-2">
                     <span className="font-medium">Refer a Friend</span>
                     <span className="text-blue-500 hover:underline cursor-pointer">Invite Now</span>
                 </li>

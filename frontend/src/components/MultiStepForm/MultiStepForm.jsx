@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import PersonalDetailsForm from './steps/PersonalInfoForm';
 import IDDetailsForm from './steps/IdentityForm';
 import SignatureForm from './steps/SignatureForm';
@@ -13,7 +14,7 @@ const MultiStepForm = () => {
         fatherName: '',
         aadhaar: '',
         pan: '',
-        signature: '',
+        signature: null,  // file input
         bankName: '',
         accountNumber: '',
         ifsc: '',
@@ -36,9 +37,32 @@ const MultiStepForm = () => {
         if (step > 0) setStep(step - 1);
     };
 
-    const handleSubmit = () => {
-        console.log('Form Submitted:', formData);
-        alert('Form submitted successfully!');
+    const handleSubmit = async () => {
+        try {
+            const data = new FormData();
+            data.append('fullName', formData.fullName);
+            data.append('dob', formData.dob);
+            data.append('fatherName', formData.fatherName);
+            data.append('aadhaar', formData.aadhaar);
+            data.append('pan', formData.pan);
+            data.append('bankName', formData.bankName);
+            data.append('accountNumber', formData.accountNumber);
+            data.append('ifsc', formData.ifsc);
+            data.append('termsAccepted', formData.termsAccepted);
+            if (formData.signature) {
+                data.append('signature', formData.signature);
+            }
+
+            const res = await axios.post('/api/user-details', data);
+            if (res.data.success) {
+                alert('Form submitted successfully!');
+            } else {
+                alert('Failed to submit the form.');
+            }
+        } catch (err) {
+            console.error(err);
+            alert('Error submitting form.');
+        }
     };
 
     return (

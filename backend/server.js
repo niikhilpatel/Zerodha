@@ -1,58 +1,54 @@
+// server.js
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import multer from 'multer'; // ✅ (Step 1) Import multer
-import otpRoutes from "./routes/otpRoutes.js";
+import multer from 'multer';
 import mongoose from 'mongoose';
-import wishlistRoutes from './routes/wishlistRoutes.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
+import otpRoutes from './routes/authRoutes.js';
+import wishlistRoutes from './routes/wishlistRoutes.js';
+import accountRoutes from './routes/account.js';
+import razorpayRoutes from './routes/razorpay.js';
 
 dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
 
-
+// MongoDB
 mongoose.connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
 })
-.then(() => console.log("MongoDB connected"))
-.catch(err => console.error("MongoDB connection error:", err));
+  .then(() => console.log('MongoDB connected'))
+  .catch(err => console.error('MongoDB connection error:', err));
 
-
-let otpStore = {}; // (In-memory OTP store)
-
-// (Step 2) Set up multer to upload files into 'uploads/' folder
+// Multer setup
 const upload = multer({ dest: 'uploads/' });
 
-app.use("/", otpRoutes);
-
-// (Step 3) Use multer middleware in your route
-app.post('/save-details', upload.single('bankStatement'), (req, res) => {
-  console.log('Received details:', req.body);    // form fields (name, email, etc.)
-  console.log('Uploaded file:', req.file);        // file info (bank statement pdf)
-
-  res.send({ success: true });
-});
+// Static folder for uploads
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Routes
+app.use('/api/otp', otpRoutes);
 app.use('/api/wishlist', wishlistRoutes);
+app.use('/api/account', accountRoutes);
+app.use('/api/payment', razorpayRoutes);
 
-
-const razorpayRoutes = require('./routes/razorpay.js');
-app.use('/api/payment', razorpayRoutes)
-
-
-
-
-
-
-
-
+// File Upload Route
+app.post('/save-details', upload.single('bankStatement'), (req, res) => {
+  console.log('Received details:', req.body);
+  console.log('Uploaded file:', req.file);
+  res.send({ success: true });
+});
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
